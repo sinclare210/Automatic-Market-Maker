@@ -84,4 +84,46 @@ contract AMM is ERC20 {
 
         
     }
+
+    function sellX (uint256 x) public{
+         require(x > 0, "Amount > 0");
+
+        Token_X.safeTransferFrom(msg.sender, address(this), x);
+
+       
+        uint256 numerator = reserve_x * reserve_y;
+        uint256 newReserveX = reserve_y + x;
+        uint256 newReserveY = numerator / newReserveX;
+
+        uint256 y = reserve_y - newReserveY;
+
+        require(y > 0, "Zero output");
+
+        Token_Y.safeTransfer(msg.sender, y);
+
+        reserve_x = newReserveX;
+        reserve_y = newReserveY;
+    }
+
+
+    function sellY(uint256 y) external {
+        require(y > 0, "Amount > 0");
+
+        Token_Y.safeTransferFrom(msg.sender, address(this), y);
+
+       
+        uint256 numerator = reserve_x * reserve_y;
+        uint256 newReserveY = reserve_y + y;
+        uint256 newReserveX = numerator / newReserveY;
+
+        uint256 x = reserve_x - newReserveX;
+
+        require(x > 0, "Zero output");
+
+        Token_X.safeTransfer(msg.sender, x);
+
+        reserve_x = newReserveX;
+        reserve_y = newReserveY;
+    
+    }
 }
