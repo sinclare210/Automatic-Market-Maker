@@ -15,7 +15,6 @@ pragma solidity ^0.8.27;
  *
  * No privileged accounts; fully decentralized.
  */
-
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -52,7 +51,7 @@ contract AMM is ERC20 {
      * @param _y Address of token Y
      */
     constructor(address _x, address _y) ERC20("AMM", "TKZ") {
-        if(_x == _y) revert NotAllowed();
+        if (_x == _y) revert NotAllowed();
         Token_X = IERC20(_x);
         Token_Y = IERC20(_y);
     }
@@ -85,7 +84,7 @@ contract AMM is ERC20 {
      * @param supply_y Amount of token Y
      */
     function mint(uint256 supply_x, uint256 supply_y) public {
-        if(supply_x == 0 || supply_y == 0) revert MustBeGreaterThanZero();
+        if (supply_x == 0 || supply_y == 0) revert MustBeGreaterThanZero();
         if (supply_x * reserve_y != supply_y * reserve_x) revert MustBeEqual();
 
         Token_X.safeTransferFrom(msg.sender, address(this), supply_x);
@@ -104,7 +103,7 @@ contract AMM is ERC20 {
      * @param z Amount of LP tokens to burn
      */
     function burn(uint256 z) public {
-        if(z == 0) revert MustBeGreaterThanZero();
+        if (z == 0) revert MustBeGreaterThanZero();
 
         uint256 ts = totalSupply();
 
